@@ -144,6 +144,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	switch (message)
 	{
 	case WM_CREATE:
+		RegisterHotKey(hWnd, 231, MOD_ALT, 0X41);//231 was defined myself  it become the wParam of WM_HOTKEY
+		RegisterHotKey(hWnd, 232, MOD_ALT, 0X50);//232 was defined myself  it become the wParam of WM_HOTKEY
+
+		break;
+	case WM_HOTKEY:
+		if (wParam == 231)
+			SendMessage(hWnd, WM_COMMAND, IDM_ANYAREA, 1);
+		else if (wParam == 232)
+			SendMessage(hWnd, WM_COMMAND, IDM_FULLSCREEN, 1);
 
 		break;
 	case WM_SIZE:
@@ -310,19 +319,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_SYSKEYDOWN:
 		switch (wParam)
 		{
-		case 0X50:
-			if (GetKeyState(VK_MENU) & 0X8000)
-				PostMessage(hWnd, WM_COMMAND, IDM_FULLSCREEN, 1);
-			break;
 		case 0X73:
 			if (GetKeyState(VK_MENU) & 0X8000)
-				PostMessage(hWnd, WM_DESTROY, 1, 1);
-		case 0X41:
-			if (GetKeyState(VK_MENU) & 0X8000)
-				PostMessage(hWnd, WM_COMMAND, IDM_ANYAREA, 1);
-			break;
-		default:
-			break;
+				PostMessage(hWnd, WM_DESTROY, 1, 1);//alt+f4 to close
 		}
 		break;
 
@@ -382,6 +381,7 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 			, storageDC, 0, 0, SRCCOPY);
 		EndPaint(hDlg, &ps);
 		break;
+	
 	case WM_INITDIALOG:
 		hPen4Dlg = (HPEN)(CreatePen(PS_DASHDOT, 5, RGB(28, 68, 201)));
 		dlgDC = GetDC(hDlg);
